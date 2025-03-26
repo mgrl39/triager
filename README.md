@@ -1,10 +1,12 @@
 <div align="center">
 
+<div align="center">
+
 <p></p>
 
 <a href="#-introducción">Introducción</a>
 <span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
-<a href="#-uso">Uso</a>
+<a href="#-funcionalidad">Funcionalidad</a>
 <span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
 <a href="#-stack">Stack</a>
 <span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
@@ -19,78 +21,81 @@
 
 ## 🧑‍🚀 Introducción
 
-**Triage System** es una aplicación simple desarrollada en **Node.js** que simula un sistema de triaje hospitalario, permitiendo el ingreso de pacientes y asignación de niveles de urgencia según un protocolo predefinido.
+**Triage System** es una aplicación de escritorio en **Java** que simula un sistema de triaje hospitalario, permitiendo el ingreso de pacientes con su nombre, edad y síntomas. Según un protocolo de urgencias, cada paciente será asignado a un nivel de prioridad y almacenado en una cola de espera. Los pacientes serán atendidos en orden de prioridad y eliminados una vez atendidos.
 
 ### Tecnología de Persistencia Seleccionada: Redis
 
-Para esta prueba de concepto, hemos seleccionado **Redis** como tecnología de persistencia. Redis es una base de datos **NoSQL**, tipo clave-valor, conocida por su alto rendimiento y confiabilidad. A diferencia de las bases de datos relacionales, Redis ofrece almacenamiento en memoria, lo que permite operaciones de lectura y escritura extremadamente rápidas. Además, es un sistema ampliamente utilizado y mantenido desde 2009.
+Se ha elegido **Redis** como tecnología de persistencia debido a su alto rendimiento y facilidad de uso como base de datos clave-valor. Redis es ideal para manejar las listas de pacientes y sus niveles de urgencia de manera eficiente.
 
 ---
 
-## 🌍 Uso
+## 🌍 Funcionalidad
 
-### ➡️ Ingreso de Pacientes:
+- **Ingreso de Pacientes**: Permite ingresar pacientes con su nombre, edad y síntomas, asignándoles un nivel de urgencia (🔴 Rojo crítico, 🟡 Amarillo urgente, 🟢 Verde leve).
+  
+- **Cola de Pacientes**: Los pacientes son colocados en una cola según su nivel de urgencia. Los pacientes más urgentes serán atendidos primero.
 
-#### Endpoint:
-```http
-POST /api/v1/pacientes
-```
-
-#### Ejemplo de cuerpo de la solicitud:
-```json
-{
-  "nombre": "Juan Pérez",
-  "edad": 45,
-  "síntomas": "Dolor en el pecho"
-}
-```
-
-#### Ejemplo de respuesta:
-```json
-{
-  "mensaje": "Paciente ingresado correctamente",
-  "nivel_urgencia": "🔴 Rojo crítico"
-}
-```
-
-### ➡️ Visualizar lista de pacientes por urgencia:
-
-#### Endpoint:
-```http
-GET /api/v1/pacientes
-```
-
-#### Ejemplo de respuesta:
-```json
-[
-  {
-    "nombre": "Juan Pérez",
-    "edad": 45,
-    "síntomas": "Dolor en el pecho",
-    "nivel_urgencia": "🔴 Rojo crítico"
-  },
-  {
-    "nombre": "Ana García",
-    "edad": 30,
-    "síntomas": "Dolor de cabeza",
-    "nivel_urgencia": "🟡 Amarillo urgente"
-  }
-]
-```
+- **Atención de Pacientes**: Los pacientes son atendidos en orden de prioridad y eliminados de la lista de espera una vez atendidos.
 
 ---
 
 ## 🏗️ Stack
 
-Este proyecto está desarrollado con:
-
-- **Node.js** - Entorno de ejecución para JavaScript.
-- **Redis** - Base de datos NoSQL de alto rendimiento utilizada para persistir la información de los pacientes.
-- **Express.js** - Framework minimalista para la creación de APIs REST en Node.js.
-- **JavaScript** - Lenguaje de programación utilizado para la implementación del sistema.
+- **Java** - Lenguaje de programación utilizado para la implementación de la aplicación.
+- **Redis** - Base de datos NoSQL utilizada para almacenar y gestionar las listas de pacientes y niveles de urgencia.
+- **Jedis** - Cliente de Redis en Java utilizado para interactuar con la base de datos.
 
 ---
 
 ## 🔑 Licencia
 
 Este proyecto está bajo la licencia [MIT](./LICENSE).
+<p></p>
+
+<a href="#-introducción">Introducción</a>
+<span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
+<a href="#-funcionalidad">Funcionalidad</a>
+<span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
+<a href="#-stack">Stack</a>
+<span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
+<a href="#-licencia">Licencia</a>
+
+![Redis Badge](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white&style=flat)
+![GitHub stars](https://img.shields.io/github/stars/mgrl39/triager)
+![GitHub issues](https://img.shields.io/github/issues/mgrl39/triager)
+![GitHub license](https://img.shields.io/github/license/mgrl39/triager)
+
+</div>
+
+## 🧑‍🚀 Introducción
+
+**Triage System** es una aplicación de escritorio en **Java** que simula un sistema de triaje hospitalario, permitiendo el ingreso de pacientes con su nombre, edad y síntomas. Según un protocolo de urgencias, cada paciente será asignado a un nivel de prioridad y almacenado en una cola de espera. Los pacientes serán atendidos en orden de prioridad y eliminados una vez atendidos.
+
+### Tecnología de Persistencia Seleccionada: Redis
+
+Se ha elegido **Redis** como tecnología de persistencia debido a su alto rendimiento y facilidad de uso como base de datos clave-valor. Redis es ideal para manejar las listas de pacientes y sus niveles de urgencia de manera eficiente.
+
+---
+
+## 🌍 Funcionalidad
+
+- **Ingreso de Pacientes**: Permite ingresar pacientes con su nombre, edad y síntomas, asignándoles un nivel de urgencia (🔴 Rojo crítico, 🟡 Amarillo urgente, 🟢 Verde leve).
+  
+- **Cola de Pacientes**: Los pacientes son colocados en una cola según su nivel de urgencia. Los pacientes más urgentes serán atendidos primero.
+
+- **Atención de Pacientes**: Los pacientes son atendidos en orden de prioridad y eliminados de la lista de espera una vez atendidos.
+
+---
+
+## 🏗️ Stack
+
+- **Java** - Lenguaje de programación utilizado para la implementación de la aplicación.
+- **Redis** - Base de datos NoSQL utilizada para almacenar y gestionar las listas de pacientes y niveles de urgencia.
+- **Jedis** - Cliente de Redis en Java utilizado para interactuar con la base de datos.
+
+---
+
+## 🔑 Licencia
+
+Este proyecto está bajo la licencia [MIT](./LICENSE).
+
