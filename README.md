@@ -1,7 +1,5 @@
 <div align="center">
 
-<div align="center">
-
 <p></p>
 
 <a href="#-introducción">Introducción</a>
@@ -13,9 +11,9 @@
 <a href="#-licencia">Licencia</a>
 
 ![Redis Badge](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white&style=flat)
-![GitHub stars](https://img.shields.io/github/stars/tu_usuario/triage-system)
-![GitHub issues](https://img.shields.io/github/issues/tu_usuario/triage-system)
-![GitHub license](https://img.shields.io/github/license/tu_usuario/triage-system)
+![GitHub stars](https://img.shields.io/github/stars/mgrl39/triager)
+![GitHub issues](https://img.shields.io/github/issues/mgrl39/triager)
+![GitHub license](https://img.shields.io/github/license/mgrl39/triager)
 
 </div>
 
