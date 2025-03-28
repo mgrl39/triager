@@ -3,6 +3,7 @@ package net.elpuig.triager;
 import net.elpuig.triager.config.MensajeApp;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.util.Map;
 import java.util.Scanner;
@@ -13,11 +14,12 @@ import static net.elpuig.triager.config.MensajeApp.colorInitializator;
 public class TriagerApplication {
 
   static Scanner scanner = new Scanner(System.in);
+  static Map<String, String> colors;
+  static ConfigurableApplicationContext context;
 
   public static void main(String[] args) {
-    SpringApplication.run(TriagerApplication.class, args);
-
-    Map<String, String> colors = colorInitializator();
+    context = SpringApplication.run(TriagerApplication.class, args);
+    colors = colorInitializator();
     System.out.println(MensajeApp.BIENVENIDA.get());
     while (true) {
       System.out.print(colors.get("blue_bold") + MensajeApp.PROGRAMA.get() + colors.get("reset") + "$ ");
