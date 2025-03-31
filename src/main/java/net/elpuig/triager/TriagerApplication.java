@@ -4,7 +4,8 @@ import net.elpuig.triager.config.MensajeApp;
 import net.elpuig.triager.config.RedisConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -14,10 +15,12 @@ import static net.elpuig.triager.config.MensajeApp.colorInitializator;
 @SpringBootApplication
 public class TriagerApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(TriagerApplication.class, args);
+    private static RedisTemplate<String, Object> redisTemplate;
+    static Map<String, String> colors = colorInitializator();
 
-        Map<String, String> colors = colorInitializator();
+    public static void main(String[] args) {
+        ConfigurableApplicationContext context = SpringApplication.run(TriagerApplication.class, args);
+
         Scanner scanner = new Scanner(System.in);
         System.out.println(MensajeApp.BIENVENIDA.get());
         while (true) {
@@ -26,31 +29,35 @@ public class TriagerApplication {
         }
     }
 
-    public static void handleCommands(String command)
-    {
-        if (command.equals("exit") || command.equals("quit")) System.exit(0);
-        else if (command.equals("info") || command.equals("help")) helpCommand();
-        else if (command.split(" ")[0].equals("patient")) {
-            patientCommand(command);
+    public static void handleCommands(String command) {
+        switch (command.split(" ")[0]) {
+            case "exit", "quit" -> System.exit(0);
+            case "info", "help" -> helpCommand();
+            case "patient" -> patientCommand(command);
+            default -> System.out.println(colorInitializator().get("yellow")
+                    + "comando no encontrado"
+                    + colorInitializator().get("reset"));
         }
     }
 
     public static void helpCommand() {
-        System.out.println(colorInitializator().get("yellow_bold") + "COMANDOS TRIAGER" + colorInitializator().get("reset") + "");
+        System.out.println(colorInitializator().get("yellow_bold") + "COMANDOS TRIAGER" + colorInitializator().get("reset"));
     }
 
-    public static void patientCommand(String command){
-        if (command.split(" ")[1].equals("list")){
-            System.out.println(colorInitializator().get("yellow_bold") + "LISTADO" + colorInitializator().get("reset") + "");
+    public static void patientCommand(String command) {
+        String[] parts = command.split(" ");
+        String yellowBold = colors.get("yellow_bold");
+        String reset = colors.get("reset");
+
+        if (parts.length == 1) {
+            System.out.println(yellowBold + "COMANDOS DE GESTIÓN DE PACIENTES" + reset);
+            return;
         }
-        else if (command.split(" ")[1].equals("add")) {
-            System.out.println(colorInitializator().get("yellow_bold") + "AÑADIDO" + colorInitializator().get("reset") + "");
-        }
-        else if (command.split(" ")[1].equals("show")) {
-            System.out.println(colorInitializator().get("yellow_bold") + "MOSTRADO" + colorInitializator().get("reset") + "");
-        }
-        else{
-            System.out.println(colorInitializator().get("yellow_bold") + "COMANDOS DE GESTIÓN DE PACIENTES" + colorInitializator().get("reset") + "");
+        switch (parts[1]) {
+            case "list" -> System.out.println(yellowBold + "LISTADO" + reset);
+            case "add" -> System.out.println(yellowBold + "AÑADIDO" + reset);
+            case "show" -> System.out.println(yellowBold + "MOSTRADO" + reset);
+            default -> System.out.println(yellowBold + "Subcomando no reconocido" + reset);
         }
     }
 
