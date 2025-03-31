@@ -4,7 +4,8 @@ import net.elpuig.triager.config.MensajeApp;
 import net.elpuig.triager.config.RedisConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.redis.core.RedisTemplate;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -14,8 +15,10 @@ import static net.elpuig.triager.config.MensajeApp.colorInitializator;
 @SpringBootApplication
 public class TriagerApplication {
 
+    private static RedisTemplate<String, Object> redisTemplate;
+
     public static void main(String[] args) {
-        SpringApplication.run(TriagerApplication.class, args);
+        ConfigurableApplicationContext context = SpringApplication.run(TriagerApplication.class, args);
 
         Map<String, String> colors = colorInitializator();
         Scanner scanner = new Scanner(System.in);
@@ -40,6 +43,10 @@ public class TriagerApplication {
     }
 
     public static void patientCommand(String command){
+        if (command.split(" ").length == 1) {
+            System.out.println(colorInitializator().get("yellow_bold") + "COMANDOS DE GESTIÓN DE PACIENTES" + colorInitializator().get("reset") + "");
+            return;
+        }
         if (command.split(" ")[1].equals("list")){
             System.out.println(colorInitializator().get("yellow_bold") + "LISTADO" + colorInitializator().get("reset") + "");
         }
@@ -48,9 +55,6 @@ public class TriagerApplication {
         }
         else if (command.split(" ")[1].equals("show")) {
             System.out.println(colorInitializator().get("yellow_bold") + "MOSTRADO" + colorInitializator().get("reset") + "");
-        }
-        else{
-            System.out.println(colorInitializator().get("yellow_bold") + "COMANDOS DE GESTIÓN DE PACIENTES" + colorInitializator().get("reset") + "");
         }
     }
 
