@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum MensajeApp {
-    BIENVENIDA("Bienvenido a Triager. Escribe 'ayuda' para ver los comandos disponibles o 'exit' para terminar"),
+    BIENVENIDA("Bienvenido a Triager. Escribe 'help' para ver los comandos disponibles o 'exit' para terminar"),
     PROGRAMA("triager");
     private final String texto;
     MensajeApp(String msg) {
