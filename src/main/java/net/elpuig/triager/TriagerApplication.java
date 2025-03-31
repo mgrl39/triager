@@ -30,10 +30,28 @@ public class TriagerApplication {
     {
         if (command.equals("exit") || command.equals("quit")) System.exit(0);
         else if (command.equals("info") || command.equals("help")) helpCommand();
+        else if (command.split(" ")[0].equals("patient")) {
+            patientCommand(command);
+        }
     }
 
     public static void helpCommand() {
         System.out.println(colorInitializator().get("yellow_bold") + "COMANDOS TRIAGER" + colorInitializator().get("reset") + "");
+    }
+
+    public static void patientCommand(String command){
+        if (command.split(" ")[1].equals("list")){
+            System.out.println(colorInitializator().get("yellow_bold") + "LISTADO" + colorInitializator().get("reset") + "");
+        }
+        else if (command.split(" ")[1].equals("add")) {
+            System.out.println(colorInitializator().get("yellow_bold") + "AÑADIDO" + colorInitializator().get("reset") + "");
+        }
+        else if (command.split(" ")[1].equals("show")) {
+            System.out.println(colorInitializator().get("yellow_bold") + "MOSTRADO" + colorInitializator().get("reset") + "");
+        }
+        else{
+            System.out.println(colorInitializator().get("yellow_bold") + "COMANDOS DE GESTIÓN DE PACIENTES" + colorInitializator().get("reset") + "");
+        }
     }
 
 }
