@@ -12,6 +12,7 @@ import java.util.Scanner;
 import java.util.Set;
 
 import static net.elpuig.triager.config.MensajeApp.colorInitializator;
+import net.elpuig.triager.config.EnvConfig;
 
 @SpringBootApplication
 public class TriagerApplication {
@@ -23,14 +24,25 @@ public class TriagerApplication {
         ConfigurableApplicationContext context = SpringApplication.run(TriagerApplication.class, args);
         redisTemplate = (RedisTemplate<String, Object>) context.getBean("redisTemplate");
 
+        // Imprimir información de conexión desde las variables de entorno
+        String redisHost = EnvConfig.get("REDIS_HOST", "localhost");
+        String redisPort = EnvConfig.get("REDIS_PORT", "6379");
+        
+        System.out.println(colors.get("cyan") + "Configuración de Redis desde .env:" + colors.get("reset"));
+        System.out.println(colors.get("cyan") + "  Host: " + redisHost + colors.get("reset"));
+        System.out.println(colors.get("cyan") + "  Puerto: " + redisPort + colors.get("reset"));
+
         // Probar la conexión a Redis al inicio
         boolean redisConnected = RedisTest.testConnection();
         if (redisConnected) {
             System.out.println(colors.get("green") + "Conexión a Redis: OK" + colors.get("reset"));
         } else {
             System.out.println(colors.get("red") + "Conexión a Redis: ERROR" + colors.get("reset"));
-            System.out.println(colors.get("yellow") + "Asegúrate de que Redis esté funcionando en 172.16.0.36:6379" + colors.get("reset"));
+            System.out.println(colors.get("yellow") + "Asegúrate de que Redis esté funcionando en " + 
+                EnvConfig.get("REDIS_HOST", "localhost") + ":" + 
+                EnvConfig.get("REDIS_PORT", "6379") + colors.get("reset"));
             System.out.println(colors.get("yellow") + "Puedes usar el script tools/install_redis_direct.sh para instalar Redis" + colors.get("reset"));
+            System.out.println(colors.get("yellow") + "O verifica la configuración en el archivo .env" + colors.get("reset"));
         }
 
         Scanner scanner = new Scanner(System.in);
