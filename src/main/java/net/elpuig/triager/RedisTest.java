@@ -124,4 +124,17 @@ public class RedisTest {
             return Set.of();
         }
     }
+
+    public static void main(String[] args) {
+        // Ejemplo de uso de los métodos
+        System.out.println("Probando conexión a Redis...");
+        if (testConnection()) {
+            System.out.println("Conexión exitosa!");
+            
+            // Aquí puedes probar otros métodos
+            setValue("test-key", "test-value");
+            String value = getValue("test-key");
+            System.out.println("Valor recuperado: " + value);
+        }
+    }
 }
