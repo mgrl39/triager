@@ -8,6 +8,8 @@
 <span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
 <a href="#-stack">Stack</a>
 <span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
+<a href="#-instalación-y-ejecución">Instalación y Ejecución</a>
+<span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
 <a href="#-licencia">Licencia</a>
 
 ![Redis Badge](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white&style=flat)
@@ -42,3 +44,40 @@ Se ha elegido **Redis** como tecnología de persistencia debido a su alto rendim
 - **Java** - Lenguaje de programación utilizado para la implementación de la aplicación.
 - **Redis** - Base de datos NoSQL utilizada para almacenar y gestionar las listas de pacientes y niveles de urgencia.
 - **Jedis** - Cliente de Redis en Java utilizado para interactuar con la base de datos.
+
+---
+
+## 🚀 Instalación y Ejecución
+
+### Requisitos Previos
+- Java 11 o superior
+- Maven
+- Redis (local o remoto)
+
+### Compilación e Instalación
+
+Para compilar e instalar todas las dependencias:
+
+```bash
+mvn clean install
+```
+
+### Ejecución
+
+Para ejecutar la prueba de conexión con Redis:
+
+```bash
+mvn exec:java -Dexec.mainClass="net.elpuig.triager.RedisTest"
+```
+
+Para iniciar la aplicación completa:
+
+```bash
+mvn exec:java -Dexec.mainClass="net.elpuig.triager.TriagerApplication"
+```
+
+---
+
+## 📄 Licencia
+
+[MIT](LICENSE)
