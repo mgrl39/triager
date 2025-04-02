@@ -13,8 +13,26 @@ public class RedisConfiguration {
     @Bean
     public JedisConnectionFactory jedisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-        config.setHostName("172.16.0.36");
-        config.setPort(6379);
+        
+        // Obtenemos las configuraciones desde las variables de entorno
+        String redisHost = EnvConfig.get("REDIS_HOST", "localhost");
+        int redisPort = Integer.parseInt(EnvConfig.get("REDIS_PORT", "6379"));
+        
+        config.setHostName(redisHost);
+        config.setPort(redisPort);
+        
+        // Si hay credenciales configuradas, las usamos
+        String username = EnvConfig.get("REDIS_USERNAME");
+        String password = EnvConfig.get("REDIS_PASSWORD");
+        
+        if (username != null && !username.isEmpty()) {
+            config.setUsername(username);
+        }
+        
+        if (password != null && !password.isEmpty()) {
+            config.setPassword(password);
+        }
+        
         return new JedisConnectionFactory(config);
     }
 
