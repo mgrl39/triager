@@ -21,7 +21,7 @@ public class TriagerApplication {
 
     public static void main(String[] args) {
         ConfigurableApplicationContext context = SpringApplication.run(TriagerApplication.class, args);
-        redisTemplate = context.getBean(RedisTemplate.class);
+        redisTemplate = (RedisTemplate<String, Object>) context.getBean("redisTemplate");
 
         // Probar la conexión a Redis al inicio
         boolean redisConnected = RedisTest.testConnection();
