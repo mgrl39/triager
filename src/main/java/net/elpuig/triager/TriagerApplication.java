@@ -159,9 +159,12 @@ public class TriagerApplication {
         
         // Clasificar los pacientes según nivel de urgencia
         for (String key : patientKeys) {
-            if (key.startsWith("patient:")) {
+            if (key.startsWith("patient:") && !key.contains(":atendido") && !key.contains("historial:")) {
                 String id = key.substring(8); // Eliminar "patient:"
                 Map<String, String> patientData = RedisTest.getHash(key);
+                if (patientData.isEmpty()) {
+                    continue; // Saltar si no es un hash válido
+                }
                 String urgencia = patientData.getOrDefault("urgencia", "verde");
                 String nombreCompleto = patientData.getOrDefault("nombre", "Sin nombre") + " " +
                         patientData.getOrDefault("apellido", "Sin apellido");
@@ -453,9 +456,12 @@ public class TriagerApplication {
         
         // Buscar el paciente con mayor prioridad
         for (String key : patientKeys) {
-            if (key.startsWith("patient:")) {
+            if (key.startsWith("patient:") && !key.contains(":atendido") && !key.contains("historial:")) {
                 String id = key.substring(8); // Eliminar "patient:"
                 Map<String, String> patientData = RedisTest.getHash(key);
+                if (patientData.isEmpty()) {
+                    continue; // Saltar si no es un hash válido
+                }
                 String urgencia = patientData.getOrDefault("urgencia", "verde");
                 long timestamp = Long.parseLong(patientData.getOrDefault("timestamp", "0"));
                 
@@ -467,7 +473,6 @@ public class TriagerApplication {
                 } else if (nextPatientUrgencia.equals("amarillo") && urgencia.equals("rojo")) {
                     esMayorPrioridad = true;
                 } else if (nextPatientUrgencia.equals(urgencia) && timestamp < nextPatientTimestamp) {
-                    // Si misma urgencia, priorizar el que llegó primero
                     esMayorPrioridad = true;
                 }
                 
@@ -505,26 +510,16 @@ public class TriagerApplication {
         String confirmacion = scanner.nextLine();
         
         if (confirmacion.equalsIgnoreCase("S")) {
-            // Eliminar paciente de la lista de espera
-            boolean removed = RedisTest.setValue("patient:" + nextPatientId + ":atendido", "true");
-            boolean deleteSuccess = true;
-            
-            // Opcionalmente, guardar en historial antes de eliminar
-            String historialKey = "historial:" + System.currentTimeMillis();
+            // Guardar en historial
+            String historialKey = "historial:patient:" + nextPatientId;
             nextPatientData.put("id", nextPatientId);
             nextPatientData.put("atendido_en", String.valueOf(System.currentTimeMillis()));
-            RedisTest.setHash(historialKey, nextPatientData);
+            boolean historialSuccess = RedisTest.setHash(historialKey, nextPatientData);
             
-            // Eliminar de la lista de espera
-            Set<String> keys = RedisTest.getAllKeys();
-            for (String key : keys) {
-                if (key.equals("patient:" + nextPatientId)) {
-                    RedisTest.setValue(key, "");
-                    // Aquí podríamos usar un comando delete, pero usamos setValue con cadena vacía
-                }
-            }
+            // Eliminar el paciente original
+            boolean deleteSuccess = RedisTest.deleteKey("patient:" + nextPatientId);
             
-            if (removed && deleteSuccess) {
+            if (historialSuccess && deleteSuccess) {
                 System.out.println(green + "Paciente atendido correctamente y movido al historial." + reset);
             } else {
                 System.out.println(red + "Error al procesar la atención del paciente." + reset);
