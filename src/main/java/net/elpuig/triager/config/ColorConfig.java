@@ -1,40 +1,16 @@
 package net.elpuig.triager.config;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public enum MensajeApp {
-    BIENVENIDA("Bienvenido al sistema de gestión de pacientes Triager"),
-    PROGRAMA("triager"),
-    HELP("""
-        COMANDOS DISPONIBLES:
-        
-        Gestión de Pacientes:
-          patient list      - Listar todos los pacientes
-          patient add       - Añadir un nuevo paciente
-          patient show ID   - Mostrar detalles de un paciente
-          patient attend    - Atender paciente con mayor prioridad
-        
-        Comandos Generales:
-          help, info        - Muestra esta ayuda
-          exit, quit        - Salir de la aplicación
-        
-        Comandos Administrador:
-          admin login       - Acceder al modo administrador
-          admin logout      - Salir del modo administrador
-        """);
-
-    private final String mensaje;
-
-    MensajeApp(String mensaje) {
-        this.mensaje = mensaje;
-    }
-
-    public String get() {
-        return mensaje;
-    }
-
-    public static Map<String, String> colorInitializator() {
+@Configuration
+public class ColorConfig {
+    
+    @Bean
+    public Map<String, String> colors() {
         Map<String, String> colors = new HashMap<>();
         
         // Colores básicos
@@ -60,4 +36,4 @@ public enum MensajeApp {
         
         return colors;
     }
-}
+} 

@@ -1,46 +1,38 @@
 package net.elpuig.triager.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
-import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Configuration
 public class RedisConfiguration {
 
+    @Value("${spring.redis.host:localhost}")
+    private String redisHost;
+
+    @Value("${spring.redis.port:6379}")
+    private int redisPort;
+
     @Bean
-    public JedisConnectionFactory jedisConnectionFactory() {
-        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration();
-        
-        // Obtenemos las configuraciones desde las variables de entorno
-        String redisHost = EnvConfig.get("REDIS_HOST", "localhost");
-        int redisPort = Integer.parseInt(EnvConfig.get("REDIS_PORT", "6379"));
-        
-        config.setHostName(redisHost);
-        config.setPort(redisPort);
-        
-        // Si hay credenciales configuradas, las usamos
-        String username = EnvConfig.get("REDIS_USERNAME");
-        String password = EnvConfig.get("REDIS_PASSWORD");
-        
-        if (username != null && !username.isEmpty()) {
-            config.setUsername(username);
-        }
-        
-        if (password != null && !password.isEmpty()) {
-            config.setPassword(password);
-        }
-        
-        return new JedisConnectionFactory(config);
+    public RedisConnectionFactory redisConnectionFactory() {
+        RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHost, redisPort);
+        return new LettuceConnectionFactory(config);
     }
 
     @Bean
-    @Primary
-    public RedisTemplate<String, Object> redisTemplate() {
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
-        template.setConnectionFactory(jedisConnectionFactory());
+        template.setConnectionFactory(connectionFactory);
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setHashKeySerializer(new StringRedisSerializer());
+        template.setHashValueSerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
+        template.afterPropertiesSet();
         return template;
     }
 }
