@@ -105,6 +105,14 @@ public class RedisTest {
      */
     public static Map<String, String> getHash(String key) {
         try (Jedis jedis = createJedisClient()) {
+            String type = jedis.type(key);
+            if (type == null || !type.equals("hash")) {
+                // Si la clave no existe o no es un hash, la eliminamos
+                if (type != null) {
+                    jedis.del(key);
+                }
+                return new HashMap<>();
+            }
             return jedis.hgetAll(key);
         } catch (Exception e) {
             System.err.println("Error al obtener hash de Redis: " + e.getMessage());
@@ -122,6 +130,20 @@ public class RedisTest {
         } catch (Exception e) {
             System.err.println("Error al obtener claves de Redis: " + e.getMessage());
             return Set.of();
+        }
+    }
+
+    /**
+     * Elimina una clave de Redis
+     * @param key Clave a eliminar
+     * @return true si se eliminó correctamente, false en caso contrario
+     */
+    public static boolean deleteKey(String key) {
+        try (Jedis jedis = createJedisClient()) {
+            return jedis.del(key) > 0;
+        } catch (Exception e) {
+            System.err.println("Error al eliminar clave de Redis: " + e.getMessage());
+            return false;
         }
     }
 
