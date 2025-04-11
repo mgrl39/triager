@@ -10,11 +10,9 @@ import java.util.Set;
 @Component
 public class RedisTest {
     private static RedisTemplate<String, Object> redisTemplate;
-    private static EnvConfig envConfig;
 
     public RedisTest(RedisTemplate<String, Object> redisTemplate, EnvConfig envConfig) {
         RedisTest.redisTemplate = redisTemplate;
-        RedisTest.envConfig = envConfig;
     }
 
     public static boolean testConnection() {

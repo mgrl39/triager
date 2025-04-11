@@ -3,11 +3,9 @@ package net.elpuig.triager;
 import net.elpuig.triager.config.EnvConfig;
 import net.elpuig.triager.controller.TriagerController;
 import net.elpuig.triager.service.PatientService;
-import net.elpuig.triager.redis.RedisTest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.redis.core.RedisTemplate;
 import java.util.Map;
 import java.util.HashMap;
 

@@ -43,9 +43,8 @@ public class TriagerController {
             case "help", "info" -> showHelp();
             case "patient" -> handlePatientCommand(parts);
             case "redis" -> {
-                if (adminMode) {
-                    handleRedisCommand(parts);
-                } else {
+                if (adminMode) handleRedisCommand(parts);
+                else {
                     System.out.println(colors.get("red") + "Los comandos de Redis solo están disponibles en modo administrador" + colors.get("reset"));
                     System.out.println(colors.get("yellow") + "Use 'admin login' para acceder al modo administrador" + colors.get("reset"));
                 }
@@ -211,7 +210,6 @@ public class TriagerController {
             case "login" -> loginAdmin();
             case "logout" -> logoutAdmin();
             case "credentials" -> configCommand(parts);
-            case "reset" -> resetCommand(parts);
             case "system" -> systemCommand(parts);
             default -> System.out.println(colors.get("red") + "Subcomando de administrador no reconocido" + colors.get("reset"));
         }
@@ -231,7 +229,6 @@ public class TriagerController {
             System.out.println(colors.get("yellow_bold") + "COMANDOS DISPONIBLES EN MODO ADMINISTRADOR:" + colors.get("reset"));
             System.out.println("  admin logout        - Salir del modo administrador");
             System.out.println("  admin credentials   - Mostrar credenciales del sistema");
-            System.out.println("  admin reset         - Reiniciar sistema");
             System.out.println("  admin system        - Ver información del sistema");
             
             System.out.println("");
@@ -269,7 +266,6 @@ public class TriagerController {
         if (adminMode) {
             System.out.println("  admin logout        - Salir del modo administrador");
             System.out.println("  admin credentials   - Mostrar credenciales del sistema");
-            System.out.println("  admin reset         - Reiniciar sistema");
             System.out.println("  admin system        - Ver información del sistema");
             
             System.out.println("");
@@ -295,7 +291,6 @@ public class TriagerController {
         if (adminMode) {
             System.out.println("  admin logout        - Salir del modo administrador");
             System.out.println("  admin credentials   - Mostrar credenciales del sistema");
-            System.out.println("  admin reset         - Reiniciar sistema");
             System.out.println("  admin system        - Ver información del sistema");
         }
     }
@@ -333,11 +328,8 @@ public class TriagerController {
         switch (parts[1]) {
             case "test" -> {
                 boolean connected = redisTest.testConnection();
-                if (connected) {
-                    System.out.println(green + "✓ Conexión a Redis exitosa" + reset);
-                } else {
-                    System.out.println(red + "✗ No se pudo conectar a Redis" + reset);
-                }
+                if (connected) System.out.println(green + "✓ Conexión a Redis exitosa" + reset);
+                else System.out.println(red + "✗ No se pudo conectar a Redis" + reset);
             }
             case "set" -> {
                 if (parts.length < 4) {
@@ -356,17 +348,13 @@ public class TriagerController {
                 }
                 String key = parts[2];
                 String value = redisTest.getValue(key);
-                if (value != null) {
-                    System.out.println(key + " = " + value);
-                } else {
-                    System.out.println(yellow + "La clave no existe en Redis" + reset);
-                }
+                if (value != null) System.out.println(key + " = " + value);
+                else System.out.println(yellow + "La clave no existe en Redis" + reset);
             }
             case "keys" -> {
                 Set<String> keys = redisTest.getAllKeys();
-                if (keys.isEmpty()) {
-                    System.out.println(yellow + "No hay claves en Redis" + reset);
-                } else {
+                if (keys.isEmpty()) System.out.println(yellow + "No hay claves en Redis" + reset);
+                else {
                     System.out.println(yellowBold + "CLAVES EN REDIS:" + reset);
                     for (String key : keys) {
                         System.out.println("  " + key);
@@ -395,75 +383,6 @@ public class TriagerController {
         System.out.println(green + "spring.redis.host: " + reset + System.getProperty("spring.redis.host", EnvConfig.get("REDIS_HOST", "localhost")));
         System.out.println(green + "spring.redis.port: " + reset + System.getProperty("spring.redis.port", EnvConfig.get("REDIS_PORT", "6379")));
         System.out.println(green + "spring.application.name: " + reset + System.getProperty("spring.application.name", "triager"));
-    }
-
-    /**
-     * Reinicio del sistema
-     */
-    private void resetCommand(String[] parts) {
-        String yellowBold = colors.get("yellow_bold");
-        String green = colors.get("green");
-        String red = colors.get("red");
-        String reset = colors.get("reset");
-        
-        if (parts.length == 2) {
-            System.out.println(yellowBold + "REINICIO DEL SISTEMA" + reset);
-            System.out.println("  admin reset app       - Reiniciar aplicación");
-            System.out.println("  admin reset redis     - Reiniciar conexión a Redis");
-            System.out.println("  admin reset all       - Reiniciar todo");
-            return;
-        }
-        
-        Scanner scanner = new Scanner(System.in);
-        System.out.print(red + "Esta operación puede interrumpir el servicio. ¿Estás seguro? (S/N): " + reset);
-        String confirmacion = scanner.nextLine();
-        
-        if (!confirmacion.equalsIgnoreCase("S")) {
-            System.out.println(yellowBold + "Operación cancelada." + reset);
-            scanner.close();
-            return;
-        }
-        
-        switch (parts[2]) {
-            case "app" -> {
-                System.out.println(yellowBold + "Reiniciando aplicación..." + reset);
-                // Simulamos un reinicio
-                System.out.println(green + "Aplicación reiniciada correctamente" + reset);
-            }
-            case "redis" -> {
-                System.out.println(yellowBold + "Reiniciando conexión a Redis..." + reset);
-                // Creamos la configuración para Redis
-                Map<String, String> envConfig = new HashMap<>();
-                envConfig.put("REDIS_HOST", EnvConfig.get("REDIS_HOST", "localhost"));
-                envConfig.put("REDIS_PORT", EnvConfig.get("REDIS_PORT", "6379"));
-                envConfig.put("REDIS_PASSWORD", EnvConfig.get("REDIS_PASSWORD", ""));
-                
-                RedisTest redisTest = new RedisTest(envConfig);
-                boolean redisConnected = redisTest.testConnection();
-                if (redisConnected) {
-                    System.out.println(green + "Conexión a Redis reiniciada correctamente" + reset);
-                } else {
-                    System.out.println(red + "Error al reconectar con Redis" + reset);
-                }
-            }
-            case "all" -> {
-                System.out.println(yellowBold + "Reiniciando todo el sistema..." + reset);
-                Map<String, String> envConfig = new HashMap<>();
-                envConfig.put("REDIS_HOST", EnvConfig.get("REDIS_HOST", "localhost"));
-                envConfig.put("REDIS_PORT", EnvConfig.get("REDIS_PORT", "6379"));
-                envConfig.put("REDIS_PASSWORD", EnvConfig.get("REDIS_PASSWORD", ""));
-                
-                RedisTest redisTest = new RedisTest(envConfig);
-                boolean redisConnected = redisTest.testConnection();
-                if (redisConnected) {
-                    System.out.println(green + "Sistema reiniciado correctamente" + reset);
-                } else {
-                    System.out.println(red + "Error al reiniciar el sistema" + reset);
-                }
-            }
-            default -> System.out.println(red + "Subcomando de reinicio no reconocido" + reset);
-        }
-        scanner.close();
     }
 
     /**

@@ -1,7 +1,6 @@
 package net.elpuig.triager.repository;
 
 import net.elpuig.triager.model.Patient;
-import net.elpuig.triager.config.RedisConfiguration;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 
