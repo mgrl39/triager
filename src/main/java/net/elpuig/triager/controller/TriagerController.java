@@ -29,11 +29,27 @@ public class TriagerController {
 
     public void start() {
         System.out.println(MensajeApp.BIENVENIDA.get());
-        while (true) {
-            String promptColor = adminMode ? colors.get("red_bold") : colors.get("blue_bold");
-            System.out.print(promptColor + MensajeApp.PROGRAMA.get() + colors.get("reset") + "$ ");
-            handleCommand(scanner.nextLine());
+        boolean continuar = true;
+        
+        while (continuar) {
+            try {
+                String promptColor = adminMode ? colors.get("red_bold") : colors.get("blue_bold");
+                System.out.print(promptColor + MensajeApp.PROGRAMA.get() + colors.get("reset") + "$ ");
+                String command = scanner.nextLine();
+                handleCommand(command);
+            } catch (java.util.NoSuchElementException e) {
+                System.out.println("\n" + colors.get("yellow") + "Saliendo de la aplicación (Ctrl+D)" + colors.get("reset"));
+                continuar = false;  // Salir del bucle
+            } catch (Exception e) {
+                System.out.println(colors.get("red") + "Error inesperado: " + e.getMessage() + colors.get("reset"));
+            }
         }
+        
+        // Cerrar recursos antes de salir
+        if (scanner != null) {
+            scanner.close();
+        }
+        System.exit(0);  // Salir limpiamente
     }
 
     private void handleCommand(String command) {
@@ -96,38 +112,43 @@ public class TriagerController {
     private void addPatient() {
         System.out.println(colors.get("yellow_bold") + "AÑADIR NUEVO PACIENTE" + colors.get("reset"));
         
-        System.out.print("Nombre: ");
-        String nombre = scanner.nextLine();
-        
-        System.out.print("Apellido: ");
-        String apellido = scanner.nextLine();
-        
-        // Validar que la edad sea un entero válido
-        int edad = 0;
-        boolean edadValida = false;
-        while (!edadValida) {
-            System.out.print("Edad: ");
-            String edadStr = scanner.nextLine();
-            try {
-                edad = Integer.parseInt(edadStr);
-                if (edad < 0) {
-                    System.out.println(colors.get("red") + "La edad no puede ser negativa. Introduzca un número positivo." + colors.get("reset"));
-                } else {
-                    edadValida = true;
+        try {
+            System.out.print("Nombre: ");
+            String nombre = scanner.nextLine();
+            
+            System.out.print("Apellido: ");
+            String apellido = scanner.nextLine();
+            
+            // Validar que la edad sea un entero válido
+            int edad = 0;
+            boolean edadValida = false;
+            while (!edadValida) {
+                System.out.print("Edad: ");
+                String edadStr = scanner.nextLine();
+                try {
+                    edad = Integer.parseInt(edadStr);
+                    if (edad < 0) {
+                        System.out.println(colors.get("red") + "La edad no puede ser negativa. Introduzca un número positivo." + colors.get("reset"));
+                    } else {
+                        edadValida = true;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(colors.get("red") + "Por favor, introduzca un número válido para la edad." + colors.get("reset"));
                 }
-            } catch (NumberFormatException e) {
-                System.out.println(colors.get("red") + "Por favor, introduzca un número válido para la edad." + colors.get("reset"));
             }
+            
+            System.out.print("Síntomas: ");
+            String sintomas = scanner.nextLine();
+            
+            Patient.UrgencyLevel urgencia = selectUrgencyLevel();
+            
+            Patient patient = patientService.addPatient(nombre, apellido, edad, sintomas, urgencia);
+            System.out.println(colors.get("green") + "Paciente añadido correctamente con ID: " + 
+                             patient.getId() + colors.get("reset"));
+        } catch (java.util.NoSuchElementException e) {
+            System.out.println("\n" + colors.get("yellow") + "Operación cancelada por EOF (Ctrl+D)" + colors.get("reset"));
+            // Aquí puedes decidir qué hacer: volver al menú principal, salir, etc.
         }
-        
-        System.out.print("Síntomas: ");
-        String sintomas = scanner.nextLine();
-        
-        Patient.UrgencyLevel urgencia = selectUrgencyLevel();
-        
-        Patient patient = patientService.addPatient(nombre, apellido, edad, sintomas, urgencia);
-        System.out.println(colors.get("green") + "Paciente añadido correctamente con ID: " + 
-                         patient.getId() + colors.get("reset"));
     }
 
     private Patient.UrgencyLevel selectUrgencyLevel() {
