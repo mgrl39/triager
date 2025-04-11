@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class PatientService {
@@ -17,7 +18,11 @@ public class PatientService {
     }
 
     public Patient addPatient(String nombre, String apellido, int edad, String sintomas, Patient.UrgencyLevel urgencia) {
-        String id = String.valueOf(System.currentTimeMillis());
+        String id;
+        do {
+            id = UUID.randomUUID().toString().substring(0, 6);
+        } while (patientRepository.findById(id).isPresent());
+        
         Patient patient = new Patient(id, nombre, apellido, edad, sintomas, urgencia);
         return patientRepository.save(patient);
     }
