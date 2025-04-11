@@ -12,6 +12,11 @@
 <span>&nbsp;&nbsp;❖&nbsp;&nbsp;</span>
 <a href="#-licencia">Licencia</a>
 
+<p align="center">
+  <img src="src/main/resources/images/triager.png" width="10%" height="10%" alt="Logo de Triager">
+</p>
+
+
 ![Redis Badge](https://img.shields.io/badge/Redis-DC382D?logo=redis&logoColor=white&style=flat)
 ![GitHub stars](https://img.shields.io/github/stars/mgrl39/triager)
 ![GitHub issues](https://img.shields.io/github/issues/mgrl39/triager)
@@ -41,18 +46,51 @@ Se ha elegido **Redis** como tecnología de persistencia debido a su alto rendim
 
 ## 🏗️ Stack
 
-- **Java** - Lenguaje de programación utilizado para la implementación de la aplicación.
-- **Redis** - Base de datos NoSQL utilizada para almacenar y gestionar las listas de pacientes y niveles de urgencia.
-- **Jedis** - Cliente de Redis en Java utilizado para interactuar con la base de datos.
+- **Java 21** - Versión requerida del JDK para la ejecución de la aplicación.
+- **Spring Boot 3.4.4** - Framework para la construcción de la aplicación.
+- **Spring Data Redis** - Integración con Redis a través de Spring.
+- **Jedis 5.2.0** - Cliente de Redis en Java (usado internamente por Spring Data Redis).
+- **dotenv-java 3.0.0** - Para gestión de variables de entorno.
 
 ---
 
 ## 🚀 Instalación y Ejecución
 
 ### Requisitos Previos
-- Java 11 o superior
-- Maven
-- Redis (local o remoto)
+- Java 21 o superior
+- Maven 3.6 o superior
+- Redis 6.0 o superior (local o remoto)
+
+### Instalación de Redis
+
+Se proporcionan tres scripts para diferentes escenarios de instalación de Redis:
+
+1. **Instalación Directa** (`tools/install_redis_direct.sh`):
+   - Instala Redis directamente en tu sistema
+   - Configura Redis para aceptar conexiones externas
+   - Ideal para desarrollo local
+
+2. **Instalación en Contenedor LXC** (`tools/install_redis_lxc.sh`):
+   - Crea un contenedor LXC con Ubuntu 20.04
+   - Instala y configura Redis dentro del contenedor
+   - Expone el puerto 6379 para conexiones externas
+   - Perfecto para entornos de prueba aislados
+
+3. **Instalación de RedisInsight** (`tools/install_redis_viewer.sh`):
+   - Instala RedisInsight, una GUI oficial de Redis
+   - Permite visualizar y gestionar datos de Redis de forma gráfica
+   - Requiere Flatpak instalado en el sistema
+
+Para usar cualquiera de estos scripts:
+```bash
+# Dar permisos de ejecución
+chmod +x tools/install_redis_*.sh
+
+# Ejecutar el script deseado
+./tools/install_redis_direct.sh    # Para instalación directa
+./tools/install_redis_lxc.sh       # Para instalación en contenedor
+./tools/install_redis_viewer.sh    # Para instalar RedisInsight
+```
 
 ### Compilación e Instalación
 
