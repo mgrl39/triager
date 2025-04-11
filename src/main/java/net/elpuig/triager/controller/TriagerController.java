@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.Arrays;
-import java.util.List;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -384,7 +383,6 @@ public class TriagerController {
     private void configCommand(String[] parts) {
         String yellowBold = colors.get("yellow_bold");
         String green = colors.get("green");
-        String red = colors.get("red");
         String reset = colors.get("reset");
         
         System.out.println(yellowBold + "CREDENCIALES DEL SISTEMA:" + reset);
@@ -422,6 +420,7 @@ public class TriagerController {
         
         if (!confirmacion.equalsIgnoreCase("S")) {
             System.out.println(yellowBold + "Operación cancelada." + reset);
+            scanner.close();
             return;
         }
         
@@ -464,6 +463,7 @@ public class TriagerController {
             }
             default -> System.out.println(red + "Subcomando de reinicio no reconocido" + reset);
         }
+        scanner.close();
     }
 
     /**
@@ -472,7 +472,6 @@ public class TriagerController {
     private void systemCommand(String[] parts) {
         String yellowBold = colors.get("yellow_bold");
         String green = colors.get("green");
-        String red = colors.get("red");
         String reset = colors.get("reset");
         
         // Creamos la configuración para Redis
