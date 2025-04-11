@@ -66,7 +66,7 @@ public class Patient {
     }
 
     public static Patient fromMap(String id, Map<String, String> map) {
-        return new Patient(
+        Patient patient = new Patient(
             id,
             map.getOrDefault("nombre", "Sin nombre"),
             map.getOrDefault("apellido", "Sin apellido"),
@@ -74,6 +74,18 @@ public class Patient {
             map.getOrDefault("sintomas", ""),
             UrgencyLevel.fromString(map.getOrDefault("urgencia", "verde"))
         );
+        
+        // Establecer el timestamp desde el mapa si existe
+        if (map.containsKey("timestamp")) {
+            try {
+                patient.timestamp = Long.parseLong(map.get("timestamp"));
+            } catch (NumberFormatException e) {
+                // Si hay un error, mantener el timestamp actual
+                System.err.println("Error al parsear timestamp: " + e.getMessage());
+            }
+        }
+        
+        return patient;
     }
 
     // Getters

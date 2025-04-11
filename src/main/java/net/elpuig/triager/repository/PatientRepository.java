@@ -94,9 +94,9 @@ public class PatientRepository {
                                 case AMARILLO -> 2;
                                 case VERDE -> 1;
                             };
-                            return priority2 - priority1; // Orden descendente
+                            return priority2 - priority1; // Orden descendente (mayor prioridad primero)
                         })
-                        .thenComparing(Patient::getTimestamp)) // Si misma urgencia, ordenar por timestamp
+                        .thenComparing(Patient::getTimestamp)) // Si misma urgencia, ordenar por timestamp (más antiguo primero)
                 .findFirst();
     }
 } 
