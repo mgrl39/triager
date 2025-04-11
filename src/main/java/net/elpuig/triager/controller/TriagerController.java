@@ -104,8 +104,23 @@ public class TriagerController {
         System.out.print("Apellido: ");
         String apellido = scanner.nextLine();
         
-        System.out.print("Edad: ");
-        int edad = Integer.parseInt(scanner.nextLine());
+        // Validar que la edad sea un entero válido
+        int edad = 0;
+        boolean edadValida = false;
+        while (!edadValida) {
+            System.out.print("Edad: ");
+            String edadStr = scanner.nextLine();
+            try {
+                edad = Integer.parseInt(edadStr);
+                if (edad < 0) {
+                    System.out.println(colors.get("red") + "La edad no puede ser negativa. Introduzca un número positivo." + colors.get("reset"));
+                } else {
+                    edadValida = true;
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(colors.get("red") + "Por favor, introduzca un número válido para la edad." + colors.get("reset"));
+            }
+        }
         
         System.out.print("Síntomas: ");
         String sintomas = scanner.nextLine();
